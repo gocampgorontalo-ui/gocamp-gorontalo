@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoCamp Gorontalo - Komunitas Roblox & Camping Adventure</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans & Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cyan: '#00f2fe',
+                            blue: '#4facfe',
+                            orange: '#ff6b6b',
+                            fire: '#ff8e53',
+                            dark: '#0b0f19',
+                            card: '#131b2e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(19, 27, 46, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
+        }
+        .glow-orange {
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.25);
+        }
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-fire {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Canvas background particles */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f293d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-cyan selection:text-black">
+
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="relative z-10">
+
+        <header class="sticky top-0 z-50 glass-panel border-b border-white/10 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-cyan to-brand-fire p-0.5 shadow-lg shadow-cyan-500/20">
+                            <div class="w-full h-full bg-brand-dark rounded-[10px] flex items-center justify-center">
+                                <i class="fa-solid font-bold text-xl text-brand-cyan fa-campground"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-display font-extrabold text-xl tracking-wider text-white">GOCAMP <span class="text-brand-cyan">GTL</span></span>
+                            <span class="block text-[10px] tracking-widest text-gray-400 uppercase font-semibold">Gorontalo Roblox Community</span>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Nav -->
+                    <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                        <a href="#hero" class="hover:text-brand-cyan transition-colors">Home</a>
+                        <a href="#about" class="hover:text-brand-cyan transition-colors">About</a>
+                        <a href="#roblox-map" class="hover:text-brand-cyan transition-colors">Roblox Map</a>
+                        <a href="#community" class="hover:text-brand-cyan transition-colors">Community</a>
+                        <a href="#guestbook" class="hover:text-brand-cyan transition-colors">Live Guestbook</a>
+                        <a href="#github-sim" class="hover:text-brand-cyan transition-colors">GitHub Sim</a>
+                    </nav>
+
+                    <!-- CTA Button Header -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="https://discord.com" target="_blank" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-brands fa-discord"></i> Join Discord
+                        </a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button id="mobileMenuBtn" class="p-2 rounded-lg bg-white/5 text-gray-300 hover:text-white hover:bg-white/10">
+                            <i class="fa-solid fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Nav Dropdown -->
+            <div id="mobileMenu" class="hidden md:hidden glass-panel border-b border-white/10 px-4 pt-2 pb-6 space-y-3">
+                <a href="#hero" class="block py-2 text-gray-300 hover:text-brand-cyan font-medium">Home</a>
+                <a href="#about" class="block py-2 text-gray-300 hover:text-brand-cyan font-medium">About</a>
+                <a href="#roblox-map" class="block py-2 text-gray-300 hover:text-brand-cyan font-medium">Roblox Map</a>
+                <a href="#community" class="block py-2 text-gray-300 hover:text-brand-cyan font-medium">Community</a>
+                <a href="#guestbook" class="block py-2 text-gray-300 hover:text-brand-cyan font-medium">Live Guestbook</a>
+                <a href="#github-sim" class="block py-2 text-gray-300 hover:text-brand-cyan font-medium">GitHub Simulation</a>
+                <a href="https://discord.com" target="_blank" class="w-full py-3 mt-2 rounded-xl text-center font-bold text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white block shadow-lg">
+                    <i class="fa-brands fa-discord mr-1"></i> Join Discord Komunitas
+                </a>
+            </div>
+        </header>
+
+        <section id="hero" class="relative pt-12 pb-24 md:pt-20 md:pb-32 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-brand-cyan/30 text-brand-cyan text-xs font-bold tracking-widest uppercase animate-pulse">
+                            <span class="w-2 h-2 rounded-full bg-brand-cyan"></span> Komunitas Roblox Gorontalo #1
+                        </div>
+
+                        <h1 class="font-display text-4xl sm:text-6xl font-black leading-tight tracking-tight text-white">
+                            WELCOME TO <br>
+                            <span class="text-gradient-cyan">GOCAMP</span> <span class="text-gradient-fire">GORONTALO</span>
+                        </h1>
+
+                        <p class="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            Wadah berkumpulnya gamers Roblox dari Gorontalo & Indonesia! Tempat asik buat <span class="text-brand-cyan font-semibold">Mabar</span>, kemah virtual, jelajah landmark unik Gorontalo, hingga ikutan turnamen mini-game seru.
+                        </p>
+
+                        <!-- CTA Buttons -->
+                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
+                            <a href="#roblox-map" class="px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark hover:shadow-lg hover:shadow-cyan-500/40 transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3">
+                                <i class="fa-solid fa-gamepad text-lg"></i> Mainkan Map Roblox
+                            </a>
+                            <a href="#community" class="px-8 py-4 rounded-xl font-bold glass-panel hover:bg-white/10 text-white border border-white/20 transition-all duration-300 hover:border-brand-cyan/50 flex items-center gap-3">
+                                <i class="fa-brands fa-discord text-lg text-indigo-400"></i> Join Discord Hub
+                            </a>
+                            <a href="#github-sim" class="px-6 py-4 rounded-xl font-bold glass-panel text-gray-300 hover:text-white border border-white/10 hover:bg-white/10 transition-all duration-300 flex items-center gap-2">
+                                <i class="fa-brands fa-github text-lg"></i> Simulation
+                            </a>
+                        </div>
+
+                        <!-- Stats Banner -->
+                        <div class="grid grid-cols-3 gap-4 pt-8 border-t border-white/10 max-w-md mx-auto lg:mx-0">
+                            <div>
+                                <div class="font-display text-2xl font-bold text-brand-cyan" id="statMembers">1,250+</div>
+                                <div class="text-xs text-gray-400 font-medium">Aktif Member</div>
+                            </div>
+                            <div>
+                                <div class="font-display text-2xl font-bold text-brand-fire">15+</div>
+                                <div class="text-xs text-gray-400 font-medium">Landmarks & Spot</div>
+                            </div>
+                            <div>
+                                <div class="font-display text-2xl font-bold text-purple-400">4.9/5</div>
+                                <div class="text-xs text-gray-400 font-medium">Map Rating</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Roblox Banner / Feature Visual Card -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-brand-cyan via-purple-600 to-brand-fire rounded-3xl blur-2xl opacity-40 animate-pulse"></div>
+                        <div class="relative glass-panel p-4 rounded-3xl border border-white/20 overflow-hidden shadow-2xl">
+                            <div class="relative h-80 sm:h-96 rounded-2xl overflow-hidden group">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop" alt="Roblox GoCamp Gameplay" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent"></div>
+                                
+                                <div class="absolute bottom-6 left-6 right-6 p-4 glass-panel rounded-xl border border-white/10">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold px-2.5 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-md flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> Live Server
+                                        </span>
+                                        <span class="text-xs text-gray-300 font-mono"><i class="fa-solid fa-users text-brand-cyan"></i> 84 Online</span>
+                                    </div>
+                                    <h3 class="font-display font-bold text-lg text-white">GoCamp Gorontalo World</h3>
+                                    <p class="text-xs text-gray-300 mt-1">Simulasi Perkemahan & Wisata Gorontalo di Roblox</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 relative bg-black/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-xs font-bold text-brand-cyan tracking-widest uppercase mb-2">Tentang Komunitas</h2>
+                    <p class="font-display text-3xl sm:text-4xl font-extrabold text-white">Petualangan Seru Gamers Gorontalo</p>
+                    <p class="text-gray-400 mt-4">GoCamp Gorontalo didirikan untuk menyatukan pecinta Roblox di wilayah Gorontalo dan sekitarnya. Kami menghadirkan suasana nongkrong virtual yang ramah, seru, dan kreatif.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="glass-panel p-8 rounded-2xl border border-white/10 hover:border-brand-cyan/40 transition-all duration-300 hover:-translate-y-2 group">
+                        <div class="w-14 h-14 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-campground"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white mb-3">Camping & Survival</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Nikmati suasana kemah di tepi danai, menyalakan api unggun, memasak, dan menjelajahi hutan rimba virtual khas Danau Limboto & pegunungan Gorontalo.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="glass-panel p-8 rounded-2xl border border-white/10 hover:border-brand-fire/40 transition-all duration-300 hover:-translate-y-2 group">
+                        <div class="w-14 h-14 rounded-xl bg-brand-fire/10 border border-brand-fire/30 flex items-center justify-center text-brand-fire text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-landmark"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white mb-3">Gorontalo Landmarks</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Peta buatan komunitas yang menghadirkan replika landmark terkenal seperti Benteng Otanaha, Menara Agung Limboto, dan pantai indah Gorontalo.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="glass-panel p-8 rounded-2xl border border-white/10 hover:border-purple-500/40 transition-all duration-300 hover:-translate-y-2 group">
+                        <div class="w-14 h-14 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white mb-3">Event Mabar & Discord</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Rutin mengadakan Mabar (Main Bareng), voice chat tiap akhir pekan, bagi-bagi Robux event, dan ajang silaturahmi antar member.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roblox-map" class="py-20 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="glass-panel rounded-3xl p-8 lg:p-12 border border-white/10 relative overflow-hidden">
+                    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                        <div class="lg:col-span-6 space-y-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-brand-fire/20 text-brand-fire border border-brand-fire/30">
+                                <i class="fa-solid fa-fire mr-1"></i> Featured Roblox Game
+                            </span>
+                            <h2 class="font-display text-3xl sm:text-5xl font-black text-white leading-tight">
+                                MAP GOCAMP GORONTALO SIMULATOR
+                            </h2>
+                            <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                                Jelajahi peta petualangan camping paling detail dengan elemen lokal Gorontalo! Kumpulkan point, selesaikan quest kemah, ganti avatar adat, dan bersenang-senang bareng teman-teman.
+                            </p>
+
+                            <!-- Features badges -->
+                            <div class="grid grid-cols-2 gap-3 pt-2">
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-300 glass-card p-3 rounded-lg">
+                                    <i class="fa-solid fa-check text-brand-cyan"></i> Custom Camping Gear
+                                </div>
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-300 glass-card p-3 rounded-lg">
+                                    <i class="fa-solid fa-check text-brand-cyan"></i> Custom Gorontalo Costumes
+                                </div>
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-300 glass-card p-3 rounded-lg">
+                                    <i class="fa-solid fa-check text-brand-cyan"></i> Mini Games & Parkour
+                                </div>
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-300 glass-card p-3 rounded-lg">
+                                    <i class="fa-solid fa-check text-brand-cyan"></i> Day / Night & Weather Cycle
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex flex-wrap items-center gap-4">
+                                <a href="https://www.roblox.com" target="_blank" class="px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-600/30 transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-play"></i> Mainkan di Roblox Now
+                                </a>
+                                <button onclick="showMapInfoModal()" class="px-6 py-4 rounded-xl font-bold glass-card text-white hover:bg-white/10 transition">
+                                    Detail Info Map
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Map Preview Cards / Gameplay Mockup -->
+                        <div class="lg:col-span-6 grid grid-cols-2 gap-4">
+                            <div class="space-y-4">
+                                <div class="h-48 rounded-2xl overflow-hidden glass-card p-1 border border-white/10 group">
+                                    <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover rounded-xl group-hover:scale-110 transition duration-500" alt="Campfire Spot">
+                                </div>
+                                <div class="h-32 rounded-2xl overflow-hidden glass-card p-1 border border-white/10 group">
+                                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover rounded-xl group-hover:scale-110 transition duration-500" alt="Gorontalo Nature">
+                                </div>
+                            </div>
+                            <div class="space-y-4 pt-6">
+                                <div class="h-32 rounded-2xl overflow-hidden glass-card p-1 border border-white/10 group">
+                                    <img src="https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover rounded-xl group-hover:scale-110 transition duration-500" alt="Tent Camp">
+                                </div>
+                                <div class="h-48 rounded-2xl overflow-hidden glass-card p-1 border border-white/10 group">
+                                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover rounded-xl group-hover:scale-110 transition duration-500" alt="Night Camping Stars">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="community" class="py-20 relative bg-black/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <!-- Discord Glow Card -->
+                    <div class="lg:col-span-7 glass-panel p-8 sm:p-10 rounded-3xl border border-indigo-500/30 relative overflow-hidden glow-cyan">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase">Official Discord Hub</span>
+                                <h3 class="font-display text-3xl font-extrabold text-white mt-1">Gabung Server Discord Us</h3>
+                            </div>
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 text-3xl">
+                                <i class="fa-brands fa-discord"></i>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-300 text-sm leading-relaxed mb-8">
+                            Dapatkan akses ke channel Voice Chat Mabar, Pengumuman Event Robux Giveaway, Sharing Build Roblox Studio, serta berkenalan dengan sesama Robloxian Gorontalo!
+                        </p>
+
+                        <!-- Simulated Discord Widget -->
+                        <div class="glass-card p-4 rounded-xl border border-white/10 mb-8 space-y-3">
+                            <div class="flex items-center justify-between text-xs text-gray-400 border-b border-white/10 pb-2">
+                                <span><i class="fa-solid font-bold text-green-400 fa-circle text-[8px] mr-1"></i> 342 Members Online</span>
+                                <span>Voice Active: <strong class="text-white">General VC #1</strong></span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="flex -space-x-2">
+                                    <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-brand-dark flex items-center justify-center font-bold text-xs text-white">G</div>
+                                    <div class="w-8 h-8 rounded-full bg-purple-500 border-2 border-brand-dark flex items-center justify-center font-bold text-xs text-white">R</div>
+                                    <div class="w-8 h-8 rounded-full bg-orange-500 border-2 border-brand-dark flex items-center justify-center font-bold text-xs text-white">T</div>
+                                    <div class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-brand-dark flex items-center justify-center font-bold text-xs text-white">+</div>
+                                </div>
+                                <span class="text-xs text-gray-300 italic">"Mabar jam 8 malam ini di Map GoCamp!"</span>
+                            </div>
+                        </div>
+
+                        <a href="https://discord.com" target="_blank" class="w-full py-4 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white text-center shadow-lg shadow-indigo-600/40 transition block">
+                            <i class="fa-brands fa-discord mr-2"></i> Join Discord GoCamp Gorontalo
+                        </a>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="glass-panel p-6 rounded-2xl border border-white/10 flex items-center justify-between hover:border-pink-500/50 transition cursor-pointer group" onclick="window.open('https://tiktok.com', '_blank')">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-400 border border-pink-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                    <i class="fa-brands fa-tiktok"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">TikTok Official</h4>
+                                    <p class="text-xs text-gray-400">@gocamp.gorontalo (Highlight Mabar)</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-gray-400 group-hover:text-white"></i>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-2xl border border-white/10 flex items-center justify-between hover:border-pink-600/50 transition cursor-pointer group" onclick="window.open('https://instagram.com', '_blank')">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-pink-600/10 text-pink-500 border border-pink-600/30 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">Instagram Community</h4>
+                                    <p class="text-xs text-gray-400">@gocamp_gtl (Foto & Info Event)</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-gray-400 group-hover:text-white"></i>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-2xl border border-white/10 flex items-center justify-between hover:border-red-500/50 transition cursor-pointer group" onclick="window.open('https://youtube.com', '_blank')">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 border border-red-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                    <i class="fa-brands fa-youtube"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">YouTube Channel</h4>
+                                    <p class="text-xs text-gray-400">GoCamp Gorontalo Gaming</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-gray-400 group-hover:text-white"></i>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-2xl border border-white/10 flex items-center justify-between hover:border-brand-cyan/50 transition cursor-pointer group" onclick="window.open('https://roblox.com', '_blank')">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/30 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">Roblox Primary Group</h4>
+                                    <p class="text-xs text-gray-400">GoCamp Gorontalo Group</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-gray-400 group-hover:text-white"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="guestbook" class="py-20 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-brand-cyan tracking-widest uppercase">Realtime Database Powered</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">Komunitas Guestbook & Feedback</h2>
+                    <p class="text-gray-400 text-sm mt-2">Kirim ucapan, pesan mabar, atau saran untuk Map GoCamp Gorontalo secara real-time via Firebase DB!</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Form Input Pesan -->
+                    <div class="lg:col-span-5 glass-panel p-6 sm:p-8 rounded-3xl border border-white/10">
+                        <h3 class="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-brand-cyan"></i> Tulis Pesan Kamu
+                        </h3>
+                        <form id="guestbookForm" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1">Username Roblox / Nama</label>
+                                <input type="text" id="inputUsername" required placeholder="Contoh: GorontaloProPlayer" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-cyan text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1">Kategori Pesan</label>
+                                <select id="inputCategory" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-brand-cyan text-sm">
+                                    <option value="Mabar Greetings">Sapaan Mabar</option>
+                                    <option value="Map Feedback">Saran Map Roblox</option>
+                                    <option value="Discord Shoutout">Shoutout Komunitas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1">Pesan / Kesan</label>
+                                <textarea id="inputMessage" required rows="4" placeholder="Tuliskan pesan serumu di sini..." class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-cyan text-sm"></textarea>
+                            </div>
+                            <button type="submit" id="submitBtn" class="w-full py-3.5 rounded-xl font-bold bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark hover:opacity-90 transition shadow-lg shadow-cyan-500/20">
+                                Kirim Pesan Realtime
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Live Message Stream -->
+                    <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col h-[460px]">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+                            <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-comments text-brand-fire"></i> Live Shoutbox
+                            </h3>
+                            <span id="firebaseStatus" class="text-xs px-2.5 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 font-mono">
+                                Firebase Connected
+                            </span>
+                        </div>
+
+                        <!-- Chat List Container -->
+                        <div id="messagesContainer" class="flex-1 overflow-y-auto space-y-3 pr-2">
+                            <!-- Messages will be rendered here dynamically -->
+                            <div class="text-center text-gray-400 py-10">
+                                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-brand-cyan"></i>
+                                <p class="text-xs mt-2">Memuat pesan real-time...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="github-sim" class="py-20 relative bg-black/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-purple-400 tracking-widest uppercase">Developer & Open Source Simulation</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">Simulasi GitHub Repository Web</h2>
+                    <p class="text-gray-400 text-sm mt-2">Uji coba simulasi repositori GitHub untuk web GoCamp Gorontalo ini. Kamu bisa melihat struktur file, commit history, dan melakukan simulasi clone code.</p>
+                </div>
+
+                <div class="glass-panel rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+                    <!-- Repo Header -->
+                    <div class="p-6 bg-slate-900/80 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-brands fa-github text-3xl text-white"></i>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-brand-cyan font-semibold text-lg">gocamp-gorontalo</span>
+                                    <span class="text-gray-400">/</span>
+                                    <span class="text-white font-bold text-lg">official-website</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] bg-white/10 text-gray-300 font-mono">Public</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-0.5">Website resmi komunitas Roblox GoCamp Gorontalo dengan Firebase SDK & Tailwind CSS</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <button id="starBtn" onclick="toggleGithubStar()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-2 transition">
+                                <i class="fa-regular fa-star text-yellow-400"></i> Star <span id="starCount" class="bg-black/40 px-2 py-0.5 rounded-md font-mono text-[11px]">148</span>
+                            </button>
+                            <button onclick="copyCloneCommand()" class="px-4 py-2 rounded-xl bg-brand-cyan/20 hover:bg-brand-cyan/30 text-brand-cyan border border-brand-cyan/40 text-xs font-bold flex items-center gap-2 transition">
+                                <i class="fa-solid fa-code"></i> Clone HTTPS
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Repo Body Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/10">
+                        <!-- Left: File Tree Simulator -->
+                        <div class="lg:col-span-7 p-6 font-mono text-xs">
+                            <div class="flex justify-between items-center text-gray-400 pb-3 border-b border-white/10 mb-3">
+                                <span><i class="fa-solid fa-code-branch text-brand-cyan"></i> main branch</span>
+                                <span>Latest commit: <strong class="text-white">v2.4-firebase-update</strong></span>
+                            </div>
+
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between py-2 px-3 rounded hover:bg-white/5 cursor-pointer text-gray-300">
+                                    <span class="flex items-center gap-2"><i class="fa-solid fa-folder text-yellow-500"></i> assets/</span>
+                                    <span class="text-gray-500 text-[11px]">Update Roblox icons & banners</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 px-3 rounded hover:bg-white/5 cursor-pointer text-gray-300">
+                                    <span class="flex items-center gap-2"><i class="fa-solid fa-folder text-yellow-500"></i> src/config/</span>
+                                    <span class="text-gray-500 text-[11px]">Setup Firebase SDK & Auth</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 px-3 rounded hover:bg-white/5 cursor-pointer text-gray-200 font-semibold bg-white/5">
+                                    <span class="flex items-center gap-2"><i class="fa-brands fa-html5 text-orange-500"></i> index.html</span>
+                                    <span class="text-gray-400 text-[11px]">Main Interactive Layout</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 px-3 rounded hover:bg-white/5 cursor-pointer text-gray-300">
+                                    <span class="flex items-center gap-2"><i class="fa-solid fa-file-code text-blue-400"></i> firebase-app.js</span>
+                                    <span class="text-gray-500 text-[11px]">Realtime Shoutbox Logic</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 px-3 rounded hover:bg-white/5 cursor-pointer text-gray-300">
+                                    <span class="flex items-center gap-2"><i class="fa-solid fa-file-lines text-gray-400"></i> README.md</span>
+                                    <span class="text-gray-500 text-[11px]">Community Installation Guide</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Commit History Stream Simulator -->
+                        <div class="lg:col-span-5 p-6 space-y-4">
+                            <h4 class="font-display text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-brand-cyan"></i> Recent Commits History
+                            </h4>
+
+                            <div class="space-y-3 font-mono text-xs">
+                                <div class="p-3 rounded-xl glass-card border border-white/5">
+                                    <div class="flex justify-between text-gray-400 text-[11px]">
+                                        <span class="text-brand-cyan font-bold">@dev-gorontalo</span>
+                                        <span>2 hours ago</span>
+                                    </div>
+                                    <p class="text-white mt-1">feat: Add Firebase guestbook live sync</p>
+                                </div>
+
+                                <div class="p-3 rounded-xl glass-card border border-white/5">
+                                    <div class="flex justify-between text-gray-400 text-[11px]">
+                                        <span class="text-brand-fire font-bold">@roblox-creator</span>
+                                        <span>Yesterday</span>
+                                    </div>
+                                    <p class="text-white mt-1">style: Enhance map showcase and discord widget</p>
+                                </div>
+
+                                <div class="p-3 rounded-xl glass-card border border-white/5">
+                                    <div class="flex justify-between text-gray-400 text-[11px]">
+                                        <span class="text-purple-400 font-bold">@gocamp-admin</span>
+                                        <span>3 days ago</span>
+                                    </div>
+                                    <p class="text-white mt-1">init: Initial release GoCamp Gorontalo Hub</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="glass-panel border-t border-white/10 py-12 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-brand-cyan to-brand-fire p-0.5">
+                            <div class="w-full h-full bg-brand-dark rounded-[6px] flex items-center justify-center">
+                                <i class="fa-solid fa-campground text-brand-cyan"></i>
+                            </div>
+                        </div>
+                        <span class="font-display font-extrabold text-lg text-white">GOCAMP GORONTALO</span>
+                    </div>
+
+                    <p class="text-xs text-gray-400 text-center">
+                        &copy; 2026 GoCamp Gorontalo Roblox Community. All Rights Reserved. Not affiliated with Roblox Corporation.
+                    </p>
+
+                    <div class="flex space-x-4 text-gray-400">
+                        <a href="https://discord.com" target="_blank" class="hover:text-brand-cyan transition"><i class="fa-brands fa-discord text-lg"></i></a>
+                        <a href="https://roblox.com" target="_blank" class="hover:text-brand-cyan transition"><i class="fa-solid fa-gamepad text-lg"></i></a>
+                        <a href="https://github.com" target="_blank" class="hover:text-brand-cyan transition"><i class="fa-brands fa-github text-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Map Modal Info -->
+    <div id="mapModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden p-4">
+        <div class="glass-panel max-w-lg w-full p-6 sm:p-8 rounded-3xl border border-white/20 relative animate-fade-in">
+            <button onclick="hideMapInfoModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-display text-2xl font-black text-white mb-2">Detail Map GoCamp Gorontalo</h3>
+            <p class="text-gray-300 text-sm mb-4 leading-relaxed">
+                Map ini dibangun khusus oleh dev Gorontalo dengan mengombinasikan elemen survival camping dan arsitektur khas daerah Gorontalo.
+            </p>
+            <ul class="text-xs text-gray-300 space-y-2 mb-6">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i> Max Player Server: 30 Players</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i> Recommended Device: PC & Mobile Support</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i> Features: Campfire Cooking, Jet Skiing Lake, Otot (Souvenir Shop)</li>
+            </ul>
+            <a href="https://www.roblox.com" target="_blank" class="block w-full py-3.5 rounded-xl text-center font-bold bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg">
+                Buka di Roblox App
+            </a>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-panel px-5 py-3 rounded-xl border border-brand-cyan/50 text-white text-xs font-semibold shadow-2xl flex items-center gap-3 transition-all transform translate-y-20 opacity-0">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-brand-cyan text-base"></i>
+        <span id="toastMsg">Pesan berhasil dikirim!</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Config Setup
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "demo-api-key",
+                authDomain: "gocamp-gorontalo.firebaseapp.com",
+                projectId: "gocamp-gorontalo",
+                storageBucket: "gocamp-gorontalo.appspot.com",
+                messagingSenderId: "1234567890",
+                appId: "1:1234567890:web:abcdef"
+            };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'gocamp-gtl-app';
+
+        let app, db, auth;
+        let isFirebaseActive = false;
+
+        // In-memory fallback dataset for seamless initial display
+        let localGuestbookMessages = [
+            { username: "Udin_Gorontalo", category: "Mabar Greetings", message: "Halo kawan-kawan! Gas mabar nanti malam jam 8 di spot benteng Otanaha!", timestamp: Date.now() - 3600000 },
+            { username: "SitiRobloxGTL", category: "Map Feedback", message: "Map nya keren banget! Tenda nya serasa camping beneran di Danau Limboto.", timestamp: Date.now() - 7200000 },
+            { username: "Admin_GoCamp", category: "Discord Shoutout", message: "Jangan lupa klaim badge event minggu ini di Discord ya!", timestamp: Date.now() - 10800000 }
+        ];
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // Authenticate strictly before query
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+
+            isFirebaseActive = true;
+            document.getElementById('firebaseStatus').innerText = 'Firebase Live Connected';
+            
+            // Listen to Realtime Firestore updates
+            const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'guestbook');
+            onSnapshot(collectionRef, (snapshot) => {
+                const fetched = [];
+                snapshot.forEach(doc => {
+                    fetched.push(doc.data());
+                });
+                if (fetched.length > 0) {
+                    // Sort descending in JS memory (Rule 2)
+                    fetched.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                    renderMessages(fetched);
+                } else {
+                    renderMessages(localGuestbookMessages);
+                }
+            }, (error) => {
+                console.warn("Firestore access error, falling back to local memory mode:", error);
+                renderMessages(localGuestbookMessages);
+            });
+
+        } catch (e) {
+            console.warn("Firebase initialization skipped, fallback mode active:", e);
+            document.getElementById('firebaseStatus').innerText = 'Local Demo Mode';
+            document.getElementById('firebaseStatus').className = 'text-xs px-2.5 py-1 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-mono';
+            renderMessages(localGuestbookMessages);
+        }
+
+        // Render Guestbook Messages
+        function renderMessages(messages) {
+            const container = document.getElementById('messagesContainer');
+            if (!container) return;
+
+            if (messages.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-400 py-8 text-xs">Belum ada pesan. Jadilah yang pertama mengirim!</div>`;
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => {
+                const dateStr = new Date(msg.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `
+                    <div class="p-4 rounded-2xl glass-card border border-white/5 space-y-1 transform transition hover:border-brand-cyan/30">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-brand-cyan flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-astronaut text-[11px]"></i> ${escapeHtml(msg.username || 'Anonymous')}
+                            </span>
+                            <span class="text-[10px] text-gray-500 font-mono">${dateStr}</span>
+                        </div>
+                        <span class="inline-block text-[10px] px-2 py-0.5 rounded bg-white/10 text-gray-300 font-semibold mb-1">
+                            ${escapeHtml(msg.category || 'General')}
+                        </span>
+                        <p class="text-gray-200 text-xs leading-relaxed">${escapeHtml(msg.message || '')}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Handle Guestbook Form Submission
+        document.getElementById('guestbookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('inputUsername').value.trim();
+            const category = document.getElementById('inputCategory').value;
+            const message = document.getElementById('inputMessage').value.trim();
+
+            if (!username || !message) return;
+
+            const newMsg = {
+                username,
+                category,
+                message,
+                timestamp: Date.now()
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Mengirim...';
+
+            if (isFirebaseActive && auth.currentUser) {
+                try {
+                    const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'guestbook');
+                    await addDoc(collectionRef, newMsg);
+                } catch (err) {
+                    console.error("Firestore push error:", err);
+                    localGuestbookMessages.unshift(newMsg);
+                    renderMessages(localGuestbookMessages);
+                }
+            } else {
+                localGuestbookMessages.unshift(newMsg);
+                renderMessages(localGuestbookMessages);
+            }
+
+            document.getElementById('inputMessage').value = '';
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Kirim Pesan Realtime';
+
+            showToast('Pesan berhasil terkirim ke Shoutbox!');
+        });
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+
+    <script>
+        // Mobile Navigation Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Modals
+        function showMapInfoModal() {
+            document.getElementById('mapModal').classList.remove('hidden');
+        }
+        function hideMapInfoModal() {
+            document.getElementById('mapModal').classList.add('hidden');
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        // GitHub Star Simulation
+        let starred = false;
+        function toggleGithubStar() {
+            const countEl = document.getElementById('starCount');
+            const starBtn = document.getElementById('starBtn');
+            let current = parseInt(countEl.innerText);
+            if (!starred) {
+                countEl.innerText = current + 1;
+                starBtn.classList.add('bg-yellow-500/20', 'border', 'border-yellow-500/40');
+                showToast('Terima kasih telah memberikan Star di GitHub!');
+                starred = true;
+            } else {
+                countEl.innerText = current - 1;
+                starBtn.classList.remove('bg-yellow-500/20', 'border', 'border-yellow-500/40');
+                starred = false;
+            }
+        }
+
+        function copyCloneCommand() {
+            const cmd = "git clone https://github.com/gocamp-gorontalo/official-website.git";
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = cmd;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast('Command Clone disalin ke clipboard!');
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Background Particle Simulation (Fireflies / Cyber Stars Effect)
+        window.onload = function() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const particles = Array.from({ length: 45 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 0.5,
+                color: Math.random() > 0.5 ? '#00f2fe' : '#ff8e53',
+                speedX: (Math.random() - 0.5) * 0.4,
+                speedY: (Math.random() - 0.5) * 0.4,
+                alpha: Math.random() * 0.7 + 0.3
+            }));
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
