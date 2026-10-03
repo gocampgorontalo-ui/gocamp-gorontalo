@@ -1,0 +1,12 @@
+Taruh gambar kamu di folder ini, lalu tulis namanya di index.html
+pada BAGIAN 1 (cari: images:).
+
+Nama bawaan:
+  hero.jpg    -> gambar besar di kartu "GoCamp Gorontalo World" (bagian atas web)
+  map-1.jpg   -> foto kecil kiri-atas  (bagian Featured Map)
+  map-2.jpg   -> foto kecil kiri-bawah
+  map-3.jpg   -> foto kecil kanan-atas
+  map-4.jpg   -> foto kecil kanan-bawah
+
+Selama file belum ada, web otomatis memakai gambar cadangan dari internet.
+Tips: ukuran < 500 KB per gambar. Nama file membedakan huruf besar/kecil.

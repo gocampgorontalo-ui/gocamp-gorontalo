@@ -1,0 +1,31 @@
+name: Update Roblox stats
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"      # tiap 5 menit (batas tercepat GitHub; bisa tertunda beberapa menit)
+  workflow_dispatch:            # tombol "Run workflow" manual di tab Actions
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependency
+        working-directory: scripts
+        run: npm install
+
+      - name: Ambil data Roblox lalu tulis ke Firebase
+        working-directory: scripts
+        run: node update-stats.js
+        env:
+          ROBLOX_PLACE_ID: "138602320252326"     # <- ganti kalau ID map berubah
+          FIREBASE_DB_URL: "https://webgocamp-default-rtdb.asia-southeast1.firebasedatabase.app"
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}

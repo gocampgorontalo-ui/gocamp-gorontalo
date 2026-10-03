@@ -1,0 +1,6 @@
+# JANGAN PERNAH di-upload ke GitHub (repo kamu Public!)
+node_modules/
+.env
+bot/.env
+bot/serviceAccountKey.json
+*serviceAccount*.json
